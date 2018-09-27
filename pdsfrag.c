@@ -82,6 +82,7 @@ int testAndOpenNextFile(void)
         else
         {
             outputFilesCount++;
+            return(0);
         }
     }
 }
