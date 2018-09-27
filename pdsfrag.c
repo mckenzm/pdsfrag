@@ -31,7 +31,7 @@ char inputFileName[60];            // care to validate for too long.
 char extension[5]=".";
 char control[9];
 char outputFileName[13] = "";
-unsigned long count, outputFilescount = 0, linesCount = 0, totalLinesCount = 0;
+unsigned long count, outputFilesCount = 0, linesCount = 0, totalLinesCount = 0;
 
 // prototypes
 void preamble(void);
@@ -128,7 +128,7 @@ int main(int argn, char **argv)
                     }
                     else
                     {
-                        outputFilescount++;
+                        outputFilesCount++;
                     }
                 }
             }
@@ -152,7 +152,7 @@ int main(int argn, char **argv)
     fclose(inputFile);
 
     // print stats
-    printf("\nWrote %lu records in %lu files.\n\n", totalLinesCount, outputFilescount);
+    printf("\nWrote %lu records in %lu files.\n\n", totalLinesCount, outputFilesCount);
 
     return 0;
 }
