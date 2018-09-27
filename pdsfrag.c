@@ -35,7 +35,6 @@ void testAndCloseOutputFile(void);
 void testAndWriteRecord(void);
 int  testAndOpenNextFile(void);
 
-
 void preamble(void)
 {
     printf("\npdsfrag - Decompose IEBPTPCH dump of partitioned dataset. \n");
@@ -82,9 +81,10 @@ int testAndOpenNextFile(void)
         else
         {
             outputFilesCount++;
-            return(0);
         }
     }
+
+    return(0);
 }
 
 // **argv and *argv[] are equivalent
