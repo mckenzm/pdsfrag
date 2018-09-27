@@ -23,22 +23,32 @@
 #include <ctype.h>
 
 // declarations
-FILE *inputFile, *outputFile;
-char *eofTest;
-char fileRecord[90], pdsMemberName[9], inputFileName[60];          // care to validate for too long.
-char fileNameExtension[5]=".", control[9], outputFileName[13] = "";
-unsigned long count, outputFilesCount = 0, linesCount = 0, totalLinesCount = 0;
+FILE *inputFile
+    ,*outputFile;
+
+char *eofTest
+    ,fileRecord[90]
+	,pdsMemberName[9]
+	,inputFileName[60]          // care to validate for too long.
+    ,fileNameExtension[5] = "."
+	,control[9]           = ""
+	,outputFileName[13]   = "";
+	
+unsigned long count
+             ,outputFilesCount = 0
+			 ,linesCount       = 0
+			 ,totalLinesCount  = 0;
 
 // prototypes
-void preamble(void);
+void preamble              (void);
 void testAndCloseOutputFile(void);
-void testAndWriteRecord(void);
-int  testAndOpenNextFile(void);
+void testAndWriteRecord    (void);
+int  testAndOpenNextFile   (void);
 
 void preamble(void)
 {
-    printf("\npdsfrag - Decompose IEBPTPCH dump of partitioned dataset. \n");
-    printf("Copyright (c)(p) 2018 Matthew H. Mckenzie. \n\n");
+    printf("\n  pdsfrag - Decompose IEBPTPCH dump of partitioned dataset. \n");
+    printf("  Copyright (c)(p) 2018 Matthew H. Mckenzie. \n\n");
 }
 
 void testAndCloseOutputFile(void)
@@ -48,7 +58,7 @@ void testAndCloseOutputFile(void)
     if (strlen(outputFileName) && strncmp(outputFileName, "$$$space",8)!=0)
     {
         fclose(outputFile);
-        printf(" %7lu records written.\n", linesCount);
+        printf(" (%lu lines)\n", linesCount);
         linesCount = 0;
     }
 }
@@ -70,7 +80,7 @@ int testAndOpenNextFile(void)
     // if $$$space then we do not want to open
     if (strncmp(outputFileName, "$$$space",8) != 0)
     {
-        printf("Extracting %-13s", outputFileName);
+        printf("  extracting: %s", outputFileName);
         outputFile = fopen(outputFileName, "w");
 
         if (outputFile == NULL)
@@ -154,7 +164,7 @@ int main(int argn, char **argv)
                 rc = testAndOpenNextFile();
                 if (rc) return(rc);
             }
-      
+
             // save control field.
             strcpy(control, pdsMemberName);
         }
@@ -172,7 +182,7 @@ int main(int argn, char **argv)
     fclose(inputFile);
 
     // print stats
-    printf("\nWrote %lu records in %lu files.\n\n", totalLinesCount, outputFilesCount);
+    printf("\n  wrote %lu lines into %lu files.\n\n", totalLinesCount, outputFilesCount);
 
     return 0;
 }
