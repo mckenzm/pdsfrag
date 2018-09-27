@@ -48,7 +48,7 @@ void testAndCloseOutputFile(void)
     if (strlen(outputFileName) && strncmp(outputFileName, "$$$space",8)!=0)
     {
         fclose(outputFile);
-        printf(" %lu records written.\n", linesCount);
+        printf(" %7lu records written.\n", linesCount);
         linesCount = 0;
     }
 }
@@ -152,11 +152,9 @@ int main(int argn, char **argv)
 
                 // open the next output file if filename is acceptable
                 rc = testAndOpenNextFile();
-                if (rc)
-                {
-                    return(rc);
-                }
+                if (rc) return(rc);
             }
+      
             // save control field.
             strcpy(control, pdsMemberName);
         }
