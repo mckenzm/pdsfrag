@@ -37,7 +37,8 @@ char *eofTest
 unsigned long count
              ,outputFilesCount = 0
 			 ,linesCount       = 0
-			 ,totalLinesCount  = 0;
+			 ,totalLinesCount  = 0
+			 ,linesRead        = 0;
 
 // prototypes
 void preamble              (void);
@@ -136,6 +137,7 @@ int main(int argn, char **argv)
     // while not at end....
     while (eofTest != NULL)
     {
+		linesRead++;
         // test for header, in theory the control field could be the entire line, saving some processing.
         if (strncmp(fileRecord, "MEMBER NAME  ", 13) == 0)
         {
@@ -170,12 +172,17 @@ int main(int argn, char **argv)
         }
         else
         {
+			if (linesRead == 1)
+			{
+		        printf("  Error. Expected MEMBER NAME in first line read.\n\n");
+                return (8);
+			}
             testAndWriteRecord();
         }
         // read next line
         memset(fileRecord, 0, 81);
         eofTest = fgets(fileRecord, 80, inputFile);
-    }                                           // end while
+    }   // end while
 
     // end processing
     testAndCloseOutputFile();
