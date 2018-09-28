@@ -4,7 +4,7 @@
  *   Matthew H. McKenzie 2018
  *
  *   To do:
- *          (1)...Use a flag to for $$$space status.
+ *          (1)...Use a flag for $$$space status.
  *          (2)...Quiet and Verbose modes.
  *          (3)...Doco in flowerbox.
  *          (4)...Flowerbox coments.
@@ -194,7 +194,7 @@ int main(int argc, char **argv)
         return(7);
     }
 
-        for (count = 0; count < strlen(fileNameExtension); count++)
+    for (count = 0; count < strlen(fileNameExtension); count++)
     {
         fileNameExtension[count] = (char)tolower(fileNameExtension[count]);
     }
