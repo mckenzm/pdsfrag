@@ -5,22 +5,22 @@
  *
  *   To do:
  *          (1)...Use a flag to for $$$space status.
- *          (2)...Standardise argument handling with switches.
- *          (3)...Quiet and Verbose modes.
- *          (4)...Doco in flowerbox.
- *          (5)...Flowerbox coments.
- *          (6)...Help text.
- *          (7)...man entry.
- *          (8)...Makefile.
- *          (9)...Zip packaging.
- *          (10)..Debian packaging.
- *          (11)..GitHub page update.
- *          (12)..Restrict to/Override allowed extensions list.
- *          (13)..Enumerate return codes as variables/macros.
+ *          (2)...Quiet and Verbose modes.
+ *          (3)...Doco in flowerbox.
+ *          (4)...Flowerbox coments.
+ *          (5)...Help text.
+ *          (6)...man entry.
+ *          (7)...Makefile.
+ *          (8)...Zip packaging.
+ *          (9)...Debian packaging.
+ *          (10)..GitHub page update.
+ *          (11)..Restrict to/Override allowed extensions list.
+ *          (12)..Enumerate return codes as variables/macros.
  ****************************************************************************************/
 #include <stdio.h>
 #include <memory.h>
 #include <ctype.h>
+#include <unistd.h>
 
 // declarations
 FILE *inputFile
@@ -45,6 +45,7 @@ void preamble              (void);
 void testAndCloseOutputFile(void);
 void testAndWriteRecord    (void);
 int  testAndOpenNextFile   (void);
+void helpText              (void);
 
 void preamble(void)
 {
@@ -86,7 +87,7 @@ int testAndOpenNextFile(void)
 
         if (outputFile == NULL)
         {
-            printf("Error. Failed to open output file %s\n", outputFileName);
+            printf("  Error. Failed to open output file %s\n", outputFileName);
             return (5);
         }
         else
@@ -98,36 +99,116 @@ int testAndOpenNextFile(void)
     return(0);
 }
 
-// **argv and *argv[] are equivalent
-int main(int argn, char **argv)
+void helpText(void)
 {
-    // get args for input file, fileNameExtension, sub-folder, validate
-    if (argn != 3)
-    {
-        printf("Expected arguments (in this order) : [infile] [extension]\n");
-        return 6;
+    printf("\n  Usage : pdsfrag input-file [-e extension] \n\n");
+
+    printf("  e.g. pdsfrag JCLDUMP.txt -e jcl \n\n");
+
+    printf("  The only other valid switch is -h for this message \n\n");
+
+    printf("  This utility is intended to read a file produced by the JCL described at :\n");
+    printf("  http://mainframewizard.com/content/jcl-unload-all-members-pds-ps-flat-file\n\n");
+
+    printf("  i.e. IEBPTPCH has been used to dump PDS members to a Physical Sequential file,\n");
+    printf("  and thereafter the leading character has been dropped, and the file has been \n");
+    printf("  transferred to a PC. Example JCL can be found on the GitHub page, along with \n");
+    printf("  test files.\n\n");
+
+    printf("  There are no plans to automatically detect reading of the raw file of LRECL\n");
+    printf("  up to 81, but extension should be trivial.\n\n");
+
+    printf("  This utility does not write anything for any $$$SPACE member, nor does it\n");
+    printf("  write any Ctrl-Z EOF character create by IND$FILE transfers. \n\n");
+
+}
+
+// **argv and *argv[] are equivalent
+int main(int argc, char **argv)
+{
+    char **positionals;
+
+    for (;;) {
+        int opt = getopt(argc, argv, "Hhe:");
+        if (opt == -1) break;
+
+        switch (opt) {
+        case 'e':
+            if (strlen(optarg) > 3)
+            {
+                printf("fileName extension currently limited to 3 characters.\n");
+                return(7);
+            }
+            else
+            {
+                if (strlen(optarg) == 0)
+                {
+                    printf("fileName extension was not supplied with -e.\n");
+                    return(7);
+                }
+                else
+                {
+                    strcat(fileNameExtension, optarg);
+                }
+            }
+            break;
+        case 'h':
+        case 'H':
+            helpText();
+            return(0);
+        default:
+            helpText();
+            return(99);
+        }
     }
 
-    if (strlen(argv[2]) > 4)
+    positionals = &argv[optind];
+    for (; *positionals; positionals++)
     {
-        printf("fileNameExtension currently limited to 3 characters.\n");
-        return 7;
+        if (strlen(inputFileName) == 0)
+        {
+           strcpy(inputFileName,*positionals);
+        }
+        else
+        {
+            helpText();
+            return(99);
+        }
     }
 
-    preamble();
-    strcpy(inputFileName,argv[1]);
-    strcat(fileNameExtension, argv[2]);
+    // further Mickey Mouse validation
+    if (strlen(inputFileName) == 0)
+    {
+        printf("\n  error. Missing input file name.\n\n");
+        return(7);
+    }
 
-    for (count = 0; count < strlen(fileNameExtension); count++)
+    if (strcmp(fileNameExtension,".") == 0)
+    {
+        fileNameExtension[0] = 0;
+    }
+
+    if (strncmp(fileNameExtension, "..", 2) == 0)
+    {
+        printf("\n  error. extension may not begin with '.'.\n\n");
+        return(7);
+    }
+
+        for (count = 0; count < strlen(fileNameExtension); count++)
     {
         fileNameExtension[count] = (char)tolower(fileNameExtension[count]);
     }
+
+    /************************************************************************************
+     * Main Processing starts here
+     ************************************************************************************/
+    preamble();
 
     // open input file
     inputFile = fopen(inputFileName, "r");
     if (inputFile == NULL)
     {
-        printf("Error. Failed to open input file %s\n", inputFileName);
+        printf("  Error. Failed to open input file %s\n", inputFileName);
         return (4);
     }
 
