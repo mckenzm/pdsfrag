@@ -17,6 +17,8 @@
  *          (11)..Restrict to/Override allowed extensions list.
  *          (12)..Enumerate return codes as variables/macros.
  ****************************************************************************************/
+typedef enum { false, true } bool;
+
 #include <stdio.h>
 #include <memory.h>
 #include <ctype.h>
@@ -39,6 +41,8 @@ unsigned long count
              ,linesCount       = 0
              ,totalLinesCount  = 0
              ,linesRead        = 0;
+
+bool flagQuiet = false;
 
 // prototypes
 void preamble              (void);
@@ -101,11 +105,13 @@ int testAndOpenNextFile(void)
 
 void helpText(void)
 {
-    printf("\n  Usage : pdsfrag input-file [-e extension] \n\n");
+    printf("\n  Usage : pdsfrag input-file [-e extension] [-q] \n\n");
 
     printf("  e.g. pdsfrag JCLDUMP.txt -e jcl \n\n");
 
-    printf("  The only other valid switch is -h for this message \n\n");
+    printf("  -h     help, this text.\n");
+    printf("  -e     up to 3 character filename extension.\n");
+    printf("  -q     quieter, no header or footer. \n\n");
 
     printf("  This utility is intended to read a file produced by the JCL described at :\n");
     printf("  http://mainframewizard.com/content/jcl-unload-all-members-pds-ps-flat-file\n\n");
@@ -129,7 +135,7 @@ int main(int argc, char **argv)
     char **positionals;
 
     for (;;) {
-        int opt = getopt(argc, argv, "Hhe:");
+        int opt = getopt(argc, argv, "qHhe:");
         if (opt == -1) break;
 
         switch (opt) {
@@ -156,6 +162,9 @@ int main(int argc, char **argv)
         case 'H':
             helpText();
             return(0);
+        case 'q':
+            flagQuiet = true;
+            break;
         default:
             helpText();
             return(99);
@@ -202,7 +211,11 @@ int main(int argc, char **argv)
     /************************************************************************************
      * Main Processing starts here
      ************************************************************************************/
-    preamble();
+    
+    if (!flagQuiet)
+    { 
+        preamble();
+    }
 
     // open input file
     inputFile = fopen(inputFileName, "r");
@@ -270,7 +283,9 @@ int main(int argc, char **argv)
     fclose(inputFile);
 
     // print stats
-    printf("\n  wrote %lu lines into %lu files.\n\n", totalLinesCount, outputFilesCount);
-
+    if (!flagQuiet)
+    {
+        printf("\n  wrote %lu lines into %lu files.\n\n", totalLinesCount, outputFilesCount);
+    }
     return 0;
 }
