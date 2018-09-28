@@ -5,20 +5,15 @@
  *
  *   To do:
  *          (1)...Use a flag for $$$space status.
- *          (2)...Quiet and Verbose modes.
- *          (3)...Doco in flowerbox.
- *          (4)...Flowerbox coments.
- *          (5)...Help text.
- *          (6)...man entry.
- *          (7)...Makefile.
- *          (8)...Zip packaging.
- *          (9)...Debian packaging.
- *          (10)..GitHub page update.
- *          (11)..Restrict to/Override allowed extensions list.
- *          (12)..Enumerate return codes as variables/macros.
+ *          (2)...man entry.
+ *          (3)...Makefile.
+ *          (4)...Zip packaging.
+ *          (5)...Debian packaging.
+*           (6)..Enumerate return codes as variables/macros.
  ****************************************************************************************/
 typedef enum { false, true } bool;
 
+//includes
 #include <stdio.h>
 #include <memory.h>
 #include <ctype.h>
@@ -42,7 +37,7 @@ unsigned long count
              ,totalLinesCount  = 0
              ,linesRead        = 0;
 
-bool flagQuiet = false;
+bool flagQuiet = false;        // for those too lazy to pipe to grep... 
 
 // prototypes
 void preamble              (void);
@@ -134,40 +129,42 @@ int main(int argc, char **argv)
 {
     char **positionals;
 
-    for (;;) {
+    for (;;) 
+    {
         int opt = getopt(argc, argv, "qHhe:");
         if (opt == -1) break;
 
-        switch (opt) {
-        case 'e':
-            if (strlen(optarg) > 3)
-            {
-                printf("fileName extension currently limited to 3 characters.\n");
-                return(7);
-            }
-            else
-            {
-                if (strlen(optarg) == 0)
+        switch (opt) 
+        {
+            case 'e':
+                if (strlen(optarg) > 3)
                 {
-                    printf("fileName extension was not supplied with -e.\n");
+                    printf("fileName extension currently limited to 3 characters.\n");
                     return(7);
                 }
                 else
                 {
-                    strcat(fileNameExtension, optarg);
+                    if (strlen(optarg) == 0)
+                    {
+                        printf("fileName extension was not supplied with -e.\n");
+                        return(7);
+                    }
+                    else
+                    {
+                        strcat(fileNameExtension, optarg);
+                    }
                 }
-            }
-            break;
-        case 'h':
-        case 'H':
-            helpText();
-            return(0);
-        case 'q':
-            flagQuiet = true;
-            break;
-        default:
-            helpText();
-            return(99);
+                break;
+            case 'h':
+            case 'H':
+                helpText();
+                return(0);
+            case 'q':
+                flagQuiet = true;
+                break;
+            default:
+                helpText();
+                return(99);
         }
     }
 
@@ -212,7 +209,7 @@ int main(int argc, char **argv)
      * Main Processing starts here
      ************************************************************************************/
     
-    if (!flagQuiet)
+    if (flagQuiet == false)
     { 
         preamble();
     }
@@ -283,9 +280,10 @@ int main(int argc, char **argv)
     fclose(inputFile);
 
     // print stats
-    if (!flagQuiet)
+    if (flagQuiet == false)
     {
         printf("\n  wrote %lu lines into %lu files.\n\n", totalLinesCount, outputFilesCount);
     }
+
     return 0;
 }
