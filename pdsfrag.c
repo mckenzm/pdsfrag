@@ -174,7 +174,7 @@ int main(int argn, char **argv)
         {
             if (linesRead == 1)
             {
-                printf("  Error. Expected MEMBER NAME in first line read.\n\n");
+                printf("  Error. Expected \"MEMBER NAME\" in first record of input file.\n\n");
                 return (8);
             }
             testAndWriteRecord();
