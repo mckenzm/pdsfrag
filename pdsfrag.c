@@ -37,7 +37,9 @@ unsigned long count
              ,totalLinesCount  = 0
              ,linesRead        = 0;
 
-bool flagQuiet = false;        // for those too lazy to pipe to grep...
+bool flagQuiet             = false     // for those too lazy to pipe to grep...
+    ,flagExtensionSupplied = false          
+    ,flagNoExtension       = false;          
 
 // prototypes
 void preamble              (void);
@@ -86,7 +88,7 @@ int testAndOpenNextFile(void)
 
         if (outputFile == NULL)
         {
-            printf("  Error. Failed to open output file %s\n", outputFileName);
+            printf("  Error. Failed to open output file %s\n\n", outputFileName);
             return (5);
         }
         else
@@ -105,7 +107,8 @@ void helpText(void)
     printf("  e.g. pdsfrag JCLDUMP.txt -e jcl \n\n");
 
     printf("  -h     help, this text.\n");
-    printf("  -e     up to 3 character filename extension.\n");
+    printf("  -e     up to 3 character filename extension, else .mbr will be used.\n");
+    printf("  -n     no extension, overrides -e.\n");
     printf("  -q     quieter, no header or footer. \n\n");
 
     printf("  This utility is intended to read a file produced by the JCL described at :\n");
@@ -131,12 +134,13 @@ int main(int argc, char **argv)
 
     for (;;)
     {
-        int opt = getopt(argc, argv, "qHhe:");
+        int opt = getopt(argc, argv, "qHhne:");
         if (opt == -1) break;
 
         switch (opt)
         {
             case 'e':
+                flagExtensionSupplied = true;
                 if (strlen(optarg) > 3)
                 {
                     printf("fileName extension currently limited to 3 characters.\n");
@@ -144,15 +148,7 @@ int main(int argc, char **argv)
                 }
                 else
                 {
-                    if (strlen(optarg) == 0)
-                    {
-                        printf("fileName extension was not supplied with -e.\n");
-                        return(7);
-                    }
-                    else
-                    {
-                        strcat(fileNameExtension, optarg);
-                    }
+                    strcat(fileNameExtension, optarg);
                 }
                 break;
             case 'h':
@@ -161,6 +157,9 @@ int main(int argc, char **argv)
                 return(0);
             case 'q':
                 flagQuiet = true;
+                break;
+            case 'n':
+                flagNoExtension = true;
                 break;
             default:
                 helpText();
@@ -189,10 +188,17 @@ int main(int argc, char **argv)
         return(7);
     }
 
-    if (strcmp(fileNameExtension,".") == 0)
+    if (flagNoExtension == true)
     {
         fileNameExtension[0] = 0;
     }
+    else
+    {
+        if (flagExtensionSupplied == false)
+        {
+            strcpy(fileNameExtension,".mbr");
+        }
+    }   
 
     if (strncmp(fileNameExtension, "..", 2) == 0)
     {
