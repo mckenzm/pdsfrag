@@ -9,7 +9,7 @@
  *          (3)...Makefile.
  *          (4)...Zip packaging.
  *          (5)...Debian packaging.
-*           (6)..Enumerate return codes as variables/macros.
+*           (6)...Enumerate return codes as variables/macros.
  ****************************************************************************************/
 typedef enum { false, true } bool;
 
@@ -37,7 +37,7 @@ unsigned long count
              ,totalLinesCount  = 0
              ,linesRead        = 0;
 
-bool flagQuiet = false;        // for those too lazy to pipe to grep... 
+bool flagQuiet = false;        // for those too lazy to pipe to grep...
 
 // prototypes
 void preamble              (void);
@@ -129,12 +129,12 @@ int main(int argc, char **argv)
 {
     char **positionals;
 
-    for (;;) 
+    for (;;)
     {
         int opt = getopt(argc, argv, "qHhe:");
         if (opt == -1) break;
 
-        switch (opt) 
+        switch (opt)
         {
             case 'e':
                 if (strlen(optarg) > 3)
@@ -208,9 +208,9 @@ int main(int argc, char **argv)
     /************************************************************************************
      * Main Processing starts here
      ************************************************************************************/
-    
+
     if (flagQuiet == false)
-    { 
+    {
         preamble();
     }
 
@@ -271,8 +271,7 @@ int main(int argc, char **argv)
             testAndWriteRecord();
         }
         // read next line
-        memset(fileRecord, 0, 81);
-        eofTest = fgets(fileRecord, 80, inputFile);
+         eofTest = fgets(fileRecord, 80, inputFile);
     }   // end while
 
     // end processing
