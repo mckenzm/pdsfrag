@@ -1,17 +1,35 @@
 /****************************************************************************************
- *   pdsfrag - split iebptpch pds dump  a.k.a. "ptpch".
+ *   pdsfrag - split IEBPTPCH PDS dump a.k.a. "PTPCH".
  *
  *   Matthew H. McKenzie 2018
  *
  *   To do:
- *          (1)...Use a flag for $$$space status.
- *          (2)...man entry.
- *          (3)...Makefile.
- *          (4)...Zip packaging.
- *          (5)...Debian packaging.
-*           (6)...Enumerate return codes as variables/macros.
+ *          ...Use a flag for $$$space status, or a suppression flag.
+ *          ...man entry.
+ *          ...Makefile.
+ *          ...Zip packaging.
+ *          ...Debian packaging.
+ *          ...Enumerate return codes as variables/macros.
+ *          ...Auto detect print control characters or MEMBER NAME offset.
+ *          ...Header file.
+ *
+ *   Longer term:
+ *          ...Glob for input files, extension affinity.
+ *          ...Switch for probe to guess extension ala ISPF edit HILITE.
+ *          ...Scripted execution (but currently trivial to repeatedly call.
+ *          ...Gui Interface with GTK or similar.
+ *          ...EOL conversion. DOS/Unix/Mac, again trivial to post process.
+ *
  ****************************************************************************************/
 typedef enum { false, true } bool;
+
+#define ENDED_OK               0
+#define FILE_NOT_FOUND         1
+#define EXTENSION_OVERLENGTH   2
+#define INVALID_EXTENSION_DOT  3
+#define INVALID_FILE           4
+#define OPEN_FOR_WRITE_FAIL    5
+#define BAD_OPTION            99
 
 //includes
 #include <stdio.h>
@@ -26,9 +44,9 @@ FILE *inputFile
 char *eofTest
     ,fileRecord[90]
     ,pdsMemberName[9]
-    ,inputFileName[60]          // care to validate for too long.
+    ,inputFileName[60]                  // care to validate for too long.
     ,fileNameExtension[5] = "."
-    ,control[9]           = ""
+    ,controlField[9]      = ""
     ,outputFileName[13]   = "";
 
 unsigned long count
@@ -38,8 +56,8 @@ unsigned long count
              ,linesRead        = 0;
 
 bool flagQuiet             = false     // for those too lazy to pipe to grep...
-    ,flagExtensionSupplied = false          
-    ,flagNoExtension       = false;          
+    ,flagExtensionSupplied = false
+    ,flagNoExtension       = false;
 
 // prototypes
 void preamble              (void);
@@ -89,7 +107,7 @@ int testAndOpenNextFile(void)
         if (outputFile == NULL)
         {
             printf("  Error. Failed to open output file %s\n\n", outputFileName);
-            return (5);
+            return (OPEN_FOR_WRITE_FAIL);
         }
         else
         {
@@ -97,7 +115,7 @@ int testAndOpenNextFile(void)
         }
     }
 
-    return(0);
+    return(ENDED_OK);
 }
 
 void helpText(void)
@@ -144,7 +162,7 @@ int main(int argc, char **argv)
                 if (strlen(optarg) > 3)
                 {
                     printf("fileName extension currently limited to 3 characters.\n");
-                    return(7);
+                    return(EXTENSION_OVERLENGTH);
                 }
                 else
                 {
@@ -154,7 +172,7 @@ int main(int argc, char **argv)
             case 'h':
             case 'H':
                 helpText();
-                return(0);
+                return(ENDED_OK);
             case 'q':
                 flagQuiet = true;
                 break;
@@ -163,7 +181,7 @@ int main(int argc, char **argv)
                 break;
             default:
                 helpText();
-                return(99);
+                return(BAD_OPTION);
         }
     }
 
@@ -177,7 +195,7 @@ int main(int argc, char **argv)
         else
         {
             helpText();
-            return(99);
+            return(BAD_OPTION);
         }
     }
 
@@ -185,7 +203,7 @@ int main(int argc, char **argv)
     if (strlen(inputFileName) == 0)
     {
         printf("\n  error. Missing input file name.\n\n");
-        return(7);
+        return(FILE_NOT_FOUND);
     }
 
     if (flagNoExtension == true)
@@ -198,12 +216,12 @@ int main(int argc, char **argv)
         {
             strcpy(fileNameExtension,".mbr");
         }
-    }   
+    }
 
     if (strncmp(fileNameExtension, "..", 2) == 0)
     {
         printf("\n  error. extension may not begin with '.'.\n\n");
-        return(7);
+        return(INVALID_EXTENSION_DOT);
     }
 
     for (count = 0; count < strlen(fileNameExtension); count++)
@@ -225,7 +243,7 @@ int main(int argc, char **argv)
     if (inputFile == NULL)
     {
         printf("  Error. Failed to open input file %s\n", inputFileName);
-        return (4);
+        return(FILE_NOT_FOUND);
     }
 
     // read a line
@@ -248,7 +266,7 @@ int main(int argc, char **argv)
                 pdsMemberName[count] = (char)tolower(pdsMemberName[count]);
             }
             // changed?
-            if (strcmp(pdsMemberName, control) != 0)
+            if (strcmp(pdsMemberName, controlField) != 0)
             {
                 int rc;
 
@@ -265,19 +283,19 @@ int main(int argc, char **argv)
             }
 
             // save control field.
-            strcpy(control, pdsMemberName);
+            strcpy(controlField, pdsMemberName);
         }
         else
         {
             if (linesRead == 1)
             {
                 printf("  Error. Expected \"MEMBER NAME\" in first record of input file.\n\n");
-                return (8);
+                return(INVALID_FILE);
             }
             testAndWriteRecord();
         }
         // read next line
-         eofTest = fgets(fileRecord, 80, inputFile);
+        eofTest = fgets(fileRecord, 80, inputFile);
     }   // end while
 
     // end processing
@@ -290,5 +308,5 @@ int main(int argc, char **argv)
         printf("\n  wrote %lu lines into %lu files.\n\n", totalLinesCount, outputFilesCount);
     }
 
-    return 0;
+    return(ENDED_OK);
 }
