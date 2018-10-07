@@ -1,7 +1,7 @@
 /****************************************************************************************
  *   pdsfrag - split IEBPTPCH PDS dump a.k.a. "PTPCH".
  *
- *   Matthew H. McKenzie 2018
+ *   Matthew H. McKenzie 2018                    https://github.com/mckenzm/pdsfrag
  *
  *   To do:
  *          ...Use a flag for $$$space status, or a suppression flag.
@@ -25,10 +25,11 @@ typedef enum { false, true } bool;
 
 #define ENDED_OK               0
 #define FILE_NOT_FOUND         1
-#define EXTENSION_OVERLENGTH   2
-#define INVALID_EXTENSION_DOT  3
-#define INVALID_FILE           4
-#define OPEN_FOR_WRITE_FAIL    5
+#define FILE_NOT_SUPPLIED      2
+#define EXTENSION_OVERLENGTH   3
+#define INVALID_EXTENSION_DOT  4
+#define INVALID_FILE           5
+#define OPEN_FOR_WRITE_FAIL    6
 #define BAD_OPTION            99
 
 //includes
@@ -203,7 +204,7 @@ int main(int argc, char **argv)
     if (strlen(inputFileName) == 0)
     {
         printf("\n  error. Missing input file name.\n\n");
-        return(FILE_NOT_FOUND);
+        return(FILE_NOT_SUPPLIED);
     }
 
     if (flagNoExtension == true)
