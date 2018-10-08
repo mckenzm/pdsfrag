@@ -70,7 +70,7 @@ void helpText              (void);
 void preamble(void)
 {
     printf("\n  pdsfrag - Decompose IEBPTPCH dump of partitioned dataset. \n");
-    printf("  Copyright (c)(p) 2018 Matthew H. Mckenzie. \n\n");
+    printf("  Copyright (c)(p) 2018 Matthew H. Mckenzie.\n\n");
 }
 
 void testAndCloseOutputFile(void)
@@ -136,7 +136,7 @@ void helpText(void)
     printf("  i.e. IEBPTPCH has been used to dump PDS members to a Physical Sequential file,\n");
     printf("  and thereafter the leading character has been dropped, and the file has been \n");
     printf("  transferred to a PC. Example JCL can be found on the GitHub page, along with \n");
-    printf("  test files.\n\n");
+    printf("  test files. See https://github.com/mckenzm/pdsfrag for source and JCL.\n\n");
 
     printf("  There are no plans to automatically detect reading of the raw file of LRECL\n");
     printf("  up to 81, but extension should be trivial.\n\n");
