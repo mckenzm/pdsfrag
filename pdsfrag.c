@@ -9,7 +9,6 @@
  *          ...Makefile.
  *          ...Zip packaging.
  *          ...Debian packaging.
- *          ...Enumerate return codes as variables/macros.
  *          ...Auto detect print control characters or MEMBER NAME offset.
  *          ...Header file.
  *
@@ -70,7 +69,7 @@ void helpText              (void);
 void preamble(void)
 {
     printf("\n  pdsfrag - Decompose IEBPTPCH dump of partitioned dataset. \n");
-    printf("  Copyright (c)(p) 2018 Matthew H. Mckenzie.\n\n");
+    printf("  Copyright © 2018 Matthew H. McKenzie.\n\n");
 }
 
 void testAndCloseOutputFile(void)
