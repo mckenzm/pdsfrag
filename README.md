@@ -8,7 +8,5 @@ Verbose by default, if you only want names (ala zip/unzip) use :
 At this time, all members are extracted, a future switch may allow extraction by name or pattern.
 
 Compile with : ```gcc -O3 -march=native -opdsfrag pdsfrag.c```
-or             ```gcc -O3 -march=native -static -opdsfrag pdsfrag.c```
 
 Install with : ```sudo cp pdsfrag /usr/bin```
-
