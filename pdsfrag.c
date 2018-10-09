@@ -107,7 +107,7 @@ int testAndOpenNextFile(void)
         if (outputFile == NULL)
         {
             printf("  Error. Failed to open output file %s\n\n", outputFileName);
-            return (OPEN_FOR_WRITE_FAIL);
+            return OPEN_FOR_WRITE_FAIL;
         }
         else
         {
@@ -115,7 +115,7 @@ int testAndOpenNextFile(void)
         }
     }
 
-    return(ENDED_OK);
+    return ENDED_OK;
 }
 
 void helpText(void)
@@ -162,7 +162,7 @@ int main(int argc, char **argv)
                 if (strlen(optarg) > 3)
                 {
                     printf("fileName extension currently limited to 3 characters.\n");
-                    return(EXTENSION_OVERLENGTH);
+                    return EXTENSION_OVERLENGTH;
                 }
                 else
                 {
@@ -172,7 +172,7 @@ int main(int argc, char **argv)
             case 'h':
             case 'H':
                 helpText();
-                return(ENDED_OK);
+                return ENDED_OK;
             case 'q':
                 flagQuiet = true;
                 break;
@@ -181,7 +181,7 @@ int main(int argc, char **argv)
                 break;
             default:
                 helpText();
-                return(BAD_OPTION);
+                return BAD_OPTION;
         }
     }
 
@@ -195,7 +195,7 @@ int main(int argc, char **argv)
         else
         {
             helpText();
-            return(BAD_OPTION);
+            return BAD_OPTION;
         }
     }
 
@@ -203,7 +203,7 @@ int main(int argc, char **argv)
     if (strlen(inputFileName) == 0)
     {
         printf("\n  error. Missing input file name.\n\n");
-        return(FILE_NOT_SUPPLIED);
+        return FILE_NOT_SUPPLIED;
     }
 
     if (flagNoExtension == true)
@@ -221,7 +221,7 @@ int main(int argc, char **argv)
     if (strncmp(fileNameExtension, "..", 2) == 0)
     {
         printf("\n  error. extension may not begin with '.'.\n\n");
-        return(INVALID_EXTENSION_DOT);
+        return INVALID_EXTENSION_DOT;
     }
 
     for (count = 0; count < strlen(fileNameExtension); count++)
@@ -279,7 +279,7 @@ int main(int argc, char **argv)
 
                 // open the next output file if filename is acceptable
                 rc = testAndOpenNextFile();
-                if (rc) return(rc);
+                if (rc) return rc;
             }
 
             // save control field.
@@ -290,7 +290,7 @@ int main(int argc, char **argv)
             if (linesRead == 1)
             {
                 printf("  Error. Expected \"MEMBER NAME\" in first record of input file.\n\n");
-                return(INVALID_FILE);
+                return INVALID_FILE;
             }
             testAndWriteRecord();
         }
@@ -308,5 +308,5 @@ int main(int argc, char **argv)
         printf("\n  wrote %lu lines into %lu files.\n\n", totalLinesCount, outputFilesCount);
     }
 
-    return(ENDED_OK);
+    return ENDED_OK;
 }
