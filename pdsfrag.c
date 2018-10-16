@@ -69,7 +69,7 @@ void helpText              (void);
 void preamble(void)
 {
     printf("\n  pdsfrag - Decompose IEBPTPCH dump of partitioned dataset. \n");
-    printf("  Copyright Â© 2018 Matthew H. McKenzie.\n\n");
+    printf("  Copyright © 2018 Matthew H. McKenzie.\n\n");
 }
 
 void testAndCloseOutputFile(void)
