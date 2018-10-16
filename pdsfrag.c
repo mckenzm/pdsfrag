@@ -69,7 +69,7 @@ void helpText              (void);
 void preamble(void)
 {
     printf("\n  pdsfrag - Decompose IEBPTPCH dump of partitioned dataset. \n");
-    printf("  Copyright © 2018 Matthew H. McKenzie.\n\n");
+    printf("  Copyright Â© 2018 Matthew H. McKenzie.\n\n");
 }
 
 void testAndCloseOutputFile(void)
@@ -253,7 +253,9 @@ int main(int argc, char **argv)
     while (eofTest != NULL)
     {
         linesRead++;
-        // test for header, in theory the control field could be the entire line, saving some processing.
+        // test for header, in theory the control field could be the entire line,
+        // saving some processing. Could also detect $$$SPACE here, but not
+        // really worth the effort since compare is pretty efficient anyway.
         if (strncmp(fileRecord, "MEMBER NAME  ", 13) == 0)
         {
             // complementary span
@@ -265,6 +267,7 @@ int main(int argc, char **argv)
             {
                 pdsMemberName[count] = (char)tolower(pdsMemberName[count]);
             }
+
             // changed?
             if (strcmp(pdsMemberName, controlField) != 0)
             {
