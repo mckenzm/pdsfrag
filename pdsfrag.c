@@ -243,7 +243,7 @@ int main(int argc, char **argv)
     if (inputFile == NULL)
     {
         printf("  Error. Failed to open input file %s\n", inputFileName);
-        return(FILE_NOT_FOUND);
+        return FILE_NOT_FOUND;
     }
 
     // read a line
