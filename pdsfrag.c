@@ -125,7 +125,7 @@ void helpText(void)
     printf("  e.g. pdsfrag JCLDUMP.txt -e jcl \n\n");
 
     printf("  -h     help, this text.\n");
-    printf("  -e     up to 3 character filename extension, else .mbr will be used.\n");
+    printf("  -e     up to 3 character filename extension, or else \"mbr\" will be used.\n");
     printf("  -n     no extension, overrides -e.\n");
     printf("  -q     quieter, no header or footer. \n\n");
 
