@@ -10,3 +10,6 @@ At this time, all members are extracted, a future switch may allow extraction by
 Compile with : ```gcc -O3 -march=native -opdsfrag pdsfrag.c```
 
 Install with : ```sudo cp pdsfrag /usr/bin```
+
+Hercules and TK4- users can do this in bash :
+```cat dump.jcl | grep -v ^1 | cut -c2-73 > bulk.jcl && ./pdsfrag bulk.jcl -e jcl ```
