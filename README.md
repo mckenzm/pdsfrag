@@ -11,5 +11,7 @@ Compile with : ```gcc -O3 -march=native -opdsfrag pdsfrag.c```
 
 Install with : ```sudo cp pdsfrag /usr/bin```
 
-Hercules and TK4- users can do this in bash :
+Hercules and TK4- users can do the tailoring of print output in bash :
 ```cat dump.jcl | grep -v ^1 | cut -c2-73 > bulk.jcl && ./pdsfrag bulk.jcl -e jcl ```
+
+Or we can have a default to skip those lines in processing ?  (on the to-do list).
