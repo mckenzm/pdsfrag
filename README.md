@@ -14,4 +14,12 @@ Install with : ```sudo cp pdsfrag /usr/bin```
 Hercules and TK4- users can do the tailoring of print output in bash :
 ```cat dump.jcl | grep -v ^1 | cut -c2-73 > bulk.jcl && ./pdsfrag bulk.jcl -e jcl ```
 
+IEBGENER cards that merely slice the file after column 1, a crude conversion of FBA to FB :
+
+'''//SYSIN    DD  *
+  GENERATE MAXFLDS=1
+  RECORD FIELD=(132,2,,1)
+/* '''
+
+
 Or we can have a default to skip those lines in processing ?  (on the to-do list).
