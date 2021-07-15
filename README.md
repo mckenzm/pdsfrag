@@ -16,10 +16,13 @@ Hercules and TK4- users can do the tailoring of print output in bash :
 
 IEBGENER cards that merely slice the file after column 1, a crude conversion of FBA to FB :
 
-```//SYSIN    DD *
-  GENERATE MAXFLDS=1
+```  GENERATE MAXFLDS=1
   RECORD FIELD=(132,2,,1)
-/*```
+/*
+```
+
+
+Or we can have a default to skip those lines in processing ?  (on the to-do list).
 
 
 Or we can have a default to skip those lines in processing ?  (on the to-do list).
