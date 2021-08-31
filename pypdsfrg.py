@@ -71,6 +71,6 @@ with open(infile, "r") as fd1:
 at_end = True
 control_break()
 print(" ")
-summary = "  wrote " + str(total_lines) + " lines in " + str(files) + " files"
+summary = "  wrote " + str(total_lines) + " lines into " + str(files) + " files."
 print(summary)
 print(" ")
