@@ -6,7 +6,7 @@ import sys
 from typing import TextIO
 
 extension = '.jcl'  # default extension
-infile = "bulk.xxx"  # default input file
+infile = "bulk.jcl"  # default input file
 outfile = ''
 saved_name = ''  # saved control value
 files = 0
