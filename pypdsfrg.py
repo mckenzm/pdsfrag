@@ -1,18 +1,16 @@
 #!/usr/bin/env python3
-""" pypdsfrg - to split a IEBPTPCH file (non FBA) into 8.3 named members.
-    Crude, no statistics # file should be open yet.
+""" pydsfrag - to split a IEBPTPCH file (non FBA) into 8.3 named members.
+    Crude, no statistics # file should be openyet.
 """
 import sys
 
 extension = '.jcl'  # default extension
-infile = "bulk.jcl"  # default input file
+infile = "bulk.xxx"  # default input file
 outfile = ''
 saved_name = ''  # saved control value
-fd2 = None
 files = 0
 lines = 0
 total_lines = 0
-
 
 def control_break():
     global saved_name
@@ -35,7 +33,6 @@ def control_break():
     files = files + 1
     lines = 0
 
-
 #
 # Accept command line arguments. No validation yet.
 #
@@ -49,7 +46,6 @@ if len(sys.argv) > 2:
 #
 with open(infile, "r") as fd1:
     for line in fd1:
-
         # May want to consider coping with FBA, words because DRY and we need [2].
         if line[0:11] == "MEMBER NAME":
             words = line.split()
@@ -59,12 +55,14 @@ with open(infile, "r") as fd1:
                 control_break()
 
         else:
-
             # Ordinary line of file. File should be open.
             if saved_name != '':
-                # noinspection PyUnresolvedReferences
                 fd2.write(line)
                 lines = lines + 1
+                total_lines = total_lines + 1
 
 # close output file if there was one.
 control_break()
+print(" ")
+summary = "  wrote " + str(total_lines) + " lines in " + str(files) + " files"
+print(summary)
