@@ -73,3 +73,4 @@ control_break()
 print(" ")
 summary = "  wrote " + str(total_lines) + " lines in " + str(files) + " files"
 print(summary)
+print(" ")
