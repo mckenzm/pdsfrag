@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-""" pydsfrag - to split a IEBPTPCH file (non FBA) into 8.3 named members.
-    Crude, no statistics # file should be openyet.
+""" pypdsfrg - to split a IEBPTPCH file (non FBA) into 8.3 named members.
+    Crude, no statistics # file should be open yet.
 """
 import sys
 
