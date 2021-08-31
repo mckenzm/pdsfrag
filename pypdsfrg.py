@@ -3,6 +3,7 @@
     Crude, no statistics # file should be openyet.
 """
 import sys
+from typing import TextIO
 
 extension = '.jcl'  # default extension
 infile = "bulk.xxx"  # default input file
@@ -11,6 +12,8 @@ saved_name = ''  # saved control value
 files = 0
 lines = 0
 total_lines = 0
+at_end = False
+
 
 def control_break():
     global saved_name
@@ -18,6 +21,7 @@ def control_break():
     global files
     global lines
     global outfile
+    global at_end
 
     # Do not try to close on break the first time.
     if saved_name != '':
@@ -27,11 +31,13 @@ def control_break():
         print(lineout)
 
     # Save new value for comparison and open file.
-    saved_name = words[2]
-    outfile = words[2].lower() + extension
-    fd2 = open(outfile, "w")
-    files = files + 1
-    lines = 0
+    if not at_end:
+        saved_name = words[2]
+        outfile = words[2].lower() + extension
+        fd2 = open(outfile, "w")
+        files = files + 1
+        lines = 0
+
 
 #
 # Accept command line arguments. No validation yet.
@@ -62,6 +68,7 @@ with open(infile, "r") as fd1:
                 total_lines = total_lines + 1
 
 # close output file if there was one.
+at_end = True
 control_break()
 print(" ")
 summary = "  wrote " + str(total_lines) + " lines in " + str(files) + " files"
