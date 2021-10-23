@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """ pydsfrag - to split a IEBPTPCH file (non FBA) into 8.3 named members.
-    Crude, no statistics # file should be openyet.
+    With statistics to match C version. 
 """
 import sys
 from typing import TextIO
