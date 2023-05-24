@@ -141,7 +141,7 @@ void helpText(void)
     printf("  up to 81, but extension should be trivial.\n\n");
 
     printf("  This utility does not write anything for any $$$SPACE member, nor does it\n");
-    printf("  write any Ctrl-Z EOF character create by IND$FILE transfers. \n\n");
+    printf("  write any Ctrl-Z EOF character created by IND$FILE transfers. \n\n");
 
 }
 
